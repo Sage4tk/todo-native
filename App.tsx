@@ -7,8 +7,29 @@ import Typing from './components/Typing';
 import TodoCard from './components/TodoCard';
 
 export default function App() {
+  //keyboard
+  const [keyboard, setKeyboard] = useState<string>("");
 
-  // const [keyboard, setKeyboard] = useState<boolean>(false);
+  //listener
+  const keyListner = (e:any) => {
+    setKeyboard(e.target.value);
+  }
+
+  //todo state
+  const [list, setList] = useState<Array<string>>([]);
+
+  //add input to list function
+  const addTodo = (e:any) => {
+    e.preventDefault();
+    setList([
+      ...list,
+      keyboard
+    ]);
+
+    //clear inpute
+    setKeyboard("");
+  }
+
 
   const inputRef = useRef(null);
 
@@ -30,15 +51,14 @@ export default function App() {
       <View style={styles.header} >
         <Text style={styles.headerText}>Todays todo</Text>
       </View>
-      <TextInput placeholder='add' ref={inputRef} returnKeyType="go" />
       <View>
         <TodoCard text="GOOFY" />
         <TodoCard text="GOOFY" />
       </View>
       <TouchableOpacity style={styles.addBtn}>
+        <TextInput placeholder='add' value={keyboard} onChangeText={keyListner} returnKeyType="go" />
         <Text style={styles.addBtnText} >Add a new task</Text>
       </TouchableOpacity>
-      
     </View>
   );
 }
