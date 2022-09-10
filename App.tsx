@@ -26,7 +26,7 @@ export default function App() {
       keyboard
     ]);
 
-    //clear inpute
+    //clear input
     setKeyboard("");
   }
 
@@ -52,12 +52,11 @@ export default function App() {
         <Text style={styles.headerText}>Todays todo</Text>
       </View>
       <View>
-        <TodoCard text="GOOFY" />
-        <TodoCard text="GOOFY" />
+        {list && list.map((todo:any, index:number) => <TodoCard text={todo} key={index} />)}
       </View>
       <TouchableOpacity style={styles.addBtn}>
-        <TextInput placeholder='add' value={keyboard} onChangeText={keyListner} returnKeyType="go" />
-        <Text style={styles.addBtnText} >Add a new task</Text>
+        <TextInput placeholder='add' value={keyboard} onChange={keyListner} returnKeyType="go" />
+        <Text style={styles.addBtnText} onPress={addTodo} >Add a new task</Text>
       </TouchableOpacity>
     </View>
   );
