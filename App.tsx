@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, ScrollView, FlatList, KeyboardAvoidingView } from 'react-native';
 import { useState, useRef } from 'react';
 
 //components
@@ -8,7 +8,7 @@ import TodoCard from './components/TodoCard';
 
 export default function App() {
   //keyboard
-  const [keyboard, setKeyboard] = useState<string>("");
+  const [keyboard, setKeyboard] = useState<any>("asdasd");
 
   //listener
   const keyListner = (e:any) => {
@@ -16,48 +16,63 @@ export default function App() {
   }
 
   //todo state
-  const [list, setList] = useState<Array<string>>([]);
+  const [list, setList] = useState<any>([]);
 
-  //add input to list function
-  const addTodo = (e:any) => {
-    e.preventDefault();
-    setList([
-      ...list,
-      keyboard
-    ]);
-
-    //clear input
-    setKeyboard("");
-  }
-
-
-  const inputRef = useRef(null);
-
+  //
   const showAlert = () => {
     Alert.alert(
-      "Testing",
-      "Bozo",
+      "Error",
+      "Input can't be empty",
       [
         {
           text: "Cancel",
-          onPress: () => Alert.alert("Cancel pressed")
+          // onPress: () => Alert.alert("Cancel pressed")
         }
       ]
     );
   }
 
+
+  //add input to list function
+  const addTodo = (e:any) => {
+    e.preventDefault();
+
+    //validate input
+    if (/\S/.test(keyboard)) {
+      setList([
+        ...list,
+        keyboard
+      ]);
+  
+      //clear input
+    } else {
+      showAlert();
+    }
+  }
+    
+
+
+  const inputRef = useRef(null);
+
+
   return (
     <View style={styles.container}>
       <View style={styles.header} >
         <Text style={styles.headerText}>Todays todo</Text>
+        <TouchableOpacity  onPress={addTodo} ><Text>Add a new task</Text></TouchableOpacity>
       </View>
       <View>
-        {list && list.map((todo:any, index:number) => <TodoCard text={todo} key={index} />)}
+        {list?.map((data:any, index:any) => {
+          return (
+            <TodoCard text={data} key={index} />
+          )
+        })}
       </View>
-      <TouchableOpacity style={styles.addBtn}>
-        <TextInput placeholder='add' value={keyboard} onChange={keyListner} returnKeyType="go" />
-        <Text style={styles.addBtnText} onPress={addTodo} >Add a new task</Text>
-      </TouchableOpacity>
+      <KeyboardAvoidingView style={styles.addBtn}>
+        <TextInput placeholder='add' value={keyboard} onChangeText={(event:any) => setKeyboard(event)} returnKeyType="go" onSubmitEditing={addTodo} />
+        
+      </KeyboardAvoidingView>
+      
     </View>
   );
 }
